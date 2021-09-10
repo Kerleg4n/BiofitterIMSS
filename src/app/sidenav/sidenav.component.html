@@ -1,0 +1,46 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches" *ngIf="shouldRun">
+  <mat-toolbar color="primary" class="example-toolbar">
+    <button
+      mat-icon-button (click)="snav.toggle()">
+      <mat-icon>
+        menu
+      </mat-icon>
+    </button>
+    <h1 class="example-app-name">
+      Biofitter
+    </h1>
+    <span class="example-spacer"></span>
+    <nav>
+      <a routerLink="/login" routerLinkActive="active">
+        <button mat-icon-button (click)="deleteToken()">
+          Sign out
+          <fa-icon [icon]="faSignOutAlt"></fa-icon>
+        </button>
+      </a>
+    </nav>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+      <mat-nav-list>
+        <a routerLink="/instructions" routerLinkActive="active" class="nav-list-btn"> Instructions </a>
+      </mat-nav-list>
+      <mat-nav-list>
+        <h1 class="nav-list-btn"> About Biofitter: </h1>
+        <h2 class="about-text"> Biofitter project was developed by </h2>
+        <h2 class="about-text"> López O. Juan C., Rojaz G. Felipe, </h2>
+        <h2 class="about-text"> Genaro S. Kevin F. & Colin M. Osvaldo </h2>
+        <h2 class="about-text"> (coordination in charge of Altamirano B. Myriam M.) </h2>
+      </mat-nav-list>
+    </mat-sidenav>
+
+
+    <mat-sidenav-content>
+      <app-home></app-home>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+<div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>

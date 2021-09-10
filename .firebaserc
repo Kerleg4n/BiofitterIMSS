@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "crud-biofitter": {
+      "hosting": {
+        "BiofitterIMSS": [
+          "crud-biofitter"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "crud-biofitter"
+  }
+}

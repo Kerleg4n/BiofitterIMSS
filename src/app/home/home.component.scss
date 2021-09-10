@@ -1,0 +1,110 @@
+.btn-space {
+  margin-right: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.dropdown-model-menu{
+  border-style: none;
+}
+
+.current-model{
+  color: blue;
+  text-align: center;
+  font-size: large;
+  margin-top: 25px;
+  margin-bottom:10px;
+}
+
+.parameter-card{
+  background-color: lightpink;
+  color: black;
+  margin-top: 15px;
+  border-radius: 10px;
+}
+
+.btn-space2{
+  margin-left:20px;
+}
+
+.ms-txt-input{
+  width: 50%;
+  border-radius: 10px;
+}
+
+.const-txt{
+  background-color: yellow;
+  width: 35%;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.chart{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.file-card{
+  background-color: chocolate;
+  margin-top: 15px;
+  color: black;
+  border-radius: 10px;
+}
+
+.input-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.input-file + label {
+  background-color: white;
+  display: inline-block;
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.upload-btn{
+  margin-left: 25px;
+}
+
+.file-delete-btn{
+  margin-right: 50px;
+}
+
+.data-plot{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.plot-input{
+  width: 100%;
+  border: 2px solid coral;
+  border-radius: 4px;
+}
+
+.dropdown-group-menu{
+  border-style: none;
+  background-color: chocolate;
+}
+
+.download-btn{
+  width: 100%;
+  border: 2px solid coral;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+}
+
+.update-show-btn{
+  width: 25%;
+  border: 2px solid coral;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+}

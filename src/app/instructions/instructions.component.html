@@ -1,0 +1,41 @@
+<div id="instructions-container" class="flex container mx-auto">
+  <div class="col">
+    <div class="row">
+      <div class="alert alert-primary text-alert" role="alert">
+        Welcome to the basics of Biofitter!
+      </div>
+    </div>
+
+    <div class="row">
+      <mat-card class="instructions-card">
+        <h1 class="text-instructions"> In this page you will learn how to use Biofitter webpage in few steps: </h1>
+        <mat-list>
+          <mat-list-item>
+            <h1 class="text-steps"> <fa-icon [icon]="faArrowRight"></fa-icon> Step 1: Choose a file (in tsv format) and upload it</h1>
+          </mat-list-item>
+          <img src="">
+          <mat-list-item class="text-steps">
+            <h1 class="text-steps"> <fa-icon [icon]="faArrowRight"></fa-icon> Step 2: Every time you upload or delete data sets you need to redraw plot: hiding, updating and showing the chart with the respective buttons</h1>
+          </mat-list-item>
+          <mat-list-item class="text-steps">
+            <h1 class="text-steps"> <fa-icon [icon]="faArrowRight"></fa-icon> Step 3: Your files are displayed automatically in the Data Sets section</h1>
+          </mat-list-item>
+          <mat-list-item class="text-steps">
+            <h1 class="text-steps"> <fa-icon [icon]="faArrowRight"></fa-icon> Step 4: Select between different models to work with</h1>
+          </mat-list-item>
+          <mat-list-item class="text-steps">
+            <h1 class="text-steps"> <fa-icon [icon]="faArrowRight"></fa-icon> Step 5: Click on fit button to manifest the parameters of your data sets</h1>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+    </div>
+
+    <div class="row">
+      <div class="back-to-biofitter-btn">
+        <a routerLink="/sidenav" routerLinkActive="active" class="back-to-biofitter">
+          Back to Biofitter
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

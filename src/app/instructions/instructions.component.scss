@@ -1,0 +1,55 @@
+#instructions-container {
+  min-height: 100vh;
+  min-width: 100vw;
+  color: white;
+  position: relative;
+  background-image: url('https://images.alphacoders.com/104/1048949.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  .logo {
+    max-height: 60px;
+    margin: auto;
+    margin-bottom: 30px;
+  }
+  .notification {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+.text-alert{
+  text-align: center;
+  font-size: xx-large;
+}
+
+.instructions-card{
+  background-color: coral;
+}
+
+.text-instructions{
+  font-size: large;
+  color: black;
+}
+
+.text-steps{
+  font-size: large;
+  color: black;
+}
+
+.back-to-biofitter{
+  background-color: blue;
+  font-size: large;
+  width: 100%;
+  border: 2px solid coral;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+}
+
+.back-to-biofitter-btn{
+  text-align: center;
+  margin-top: 25px;
+}

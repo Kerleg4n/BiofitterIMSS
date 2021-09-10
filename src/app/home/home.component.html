@@ -1,0 +1,891 @@
+<div class="row" style="padding: 25px 20px 0 20px">
+  <div class="col px-md-5">
+    <div class="card text-dark">
+      <h1 class="mat-h1 center">Data for uploading</h1>
+      <div class="mb-3">
+
+        <input type="file" class="input-file" id="file" accept=".tsv" multiple (input)="onFileSelected($event)">
+        <label for="file">Choose a file</label>
+        <button type="button" class="upload-btn" (click)="uploadFile()">Upload!</button>
+
+        <div *ngIf="showFileName">
+          <div *ngFor="let file of fileList">
+            <mat-card class="file-card">
+              <button class="file-delete-btn" (click)="deleteSelectedFile(file)"> <fa-icon [icon]="faTrashAlt"></fa-icon> </button>
+              {{ file.name }}
+            </mat-card>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col px-md-5">
+    <div class="card text-dark max-size-card">
+      <h1 class="mat-h1 center">Plot
+      </h1>
+      <div class="row" style="padding: 0 0 25px 0">
+        <div class="col px-md-5">
+          <button class="update-show-btn" (click)="updatePlotData()">Update</button>
+        </div>
+        <div class="col px-md-5">
+          <button class="update-show-btn" value="{{visibility}}" (click)="hideandshowPlot($event)">{{visibility}}</button>
+        </div>
+      </div>
+      <ngx-charts-line-chart class="data-plot" id="Plot" *ngIf="showPlot"
+                             [view]="[700, 500]"
+                             [scheme]="colorScheme"
+                             [legend]="legend"
+                             [showXAxisLabel]="showXAxisLabel"
+                             [showYAxisLabel]="showYAxisLabel"
+                             [xAxis]="xAxis"
+                             [yAxis]="yAxis"
+                             [legendTitle]=this.legendTitle
+                             [xAxisLabel]=this.xAxisLabel
+                             [yAxisLabel]=this.yAxisLabel
+                             [timeline]="timeline"
+                             [results]=this.experiments2
+      >
+      </ngx-charts-line-chart>
+      <div class="row" style="padding: 0 0 25px 0">
+        <div class="col px-md-5">
+          <input type="text" class="plot-input" placeholder="X label" (input)="plotXlabel($event)">
+        </div>
+        <div class="col px-md-5">
+          <input type="text" class="plot-input" placeholder="Y label" (input)="plotYlabel($event)">
+        </div>
+      </div>
+      <div class="row" style="padding: 0 0 25px 0">
+        <div class="col px-md-5">
+          <input type="text" class="plot-input" placeholder="Legend title" (input)="plotTitle($event)">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="padding: 15px 20px 0 20px">
+  <div class="col px-md-5">
+    <div class="card text-dark">
+      <h1 class="mat-h1 center">Data sets</h1>
+      <div *ngIf="showData">
+        <div *ngFor="let name of nameList">
+          <mat-card class="file-card">
+            <button class="file-delete-btn" (click)="deleteSerie(name)"> <fa-icon [icon]="faTrashAlt"></fa-icon> </button>
+            {{ name }}
+            <div class="row">
+              <label for="inputmo" *ngIf="showmoC">mo:</label>
+              <input type="number" id="inputmo" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showmoC" (input)="moGiven($event)">
+              <label for="inputP0" *ngIf="showP0C">P0:</label>
+              <input type="number" id="inputP0" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showP0C" (input)="P0Given($event)">
+              <label for="inputM0" *ngIf="showM0C">M0:</label>
+              <input type="number" id="inputM0" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showM0C" (input)="M0Given($event)">
+              <label for="inputkn" *ngIf="showknC">kn:</label>
+              <input type="number" id="inputkn" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showknC" (input)="knGiven($event)">
+              <label for="inputnc" *ngIf="showncC">nc:</label>
+              <input type="number" id="inputnc" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showncC" (input)="ncGiven($event)">
+              <label for="inputkplus" *ngIf="showkplusC">k+:</label>
+              <input type="number" id="inputkplus" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showkplusC" (input)="kplusGiven($event)">
+              <label for="inputkoff" *ngIf="showkoffC">koff:</label>
+              <input type="number" id="inputkoff" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showkoffC" (input)="koffGiven($event)">
+              <label for="inputkminus" *ngIf="showkminusC">k-:</label>
+              <input type="number" id="inputkminus" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showkminusC" (input)="kminusGiven($event)">
+              <label for="inputk2" *ngIf="showk2C">k2:</label>
+              <input type="number" id="inputk2" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showk2C" (input)="k2Given($event)">
+              <label for="inputn2" *ngIf="shown2C">n2:</label>
+              <input type="number" id="inputn2" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="shown2C" (input)="n2Given($event)">
+              <label for="inputtdecay" *ngIf="showtdecayC">tdecay:</label>
+              <input type="number" id="inputtdecay" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showtdecayC" (input)="tdecayGiven($event)">
+              <label for="inputKM" *ngIf="showKMC">KM:</label>
+              <input type="number" id="inputKM" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showKMC" (input)="KMGiven($event)">
+              <label for="inputKE" *ngIf="showKEC">KE:</label>
+              <input type="number" id="inputKE" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showKEC" (input)="KEGiven($event)">
+            </div>
+            <div class="row">
+              <label for="groupmo" *ngIf="showmoG">mo:</label>
+              <select class="dropdown-group-menu" id="groupmo" (change)="selectedGroupmo($event)" *ngIf="showmoG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="G{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupP0" *ngIf="showP0G">P0:</label>
+              <select class="dropdown-group-menu" id="groupP0" (change)="selectedGroupP0($event)" *ngIf="showP0G">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupM0" *ngIf="showM0G">M0:</label>
+              <select class="dropdown-group-menu" id="groupM0" (change)="selectedGroupM0($event)" *ngIf="showM0G">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupkn" *ngIf="showknG">kn:</label>
+              <select class="dropdown-group-menu" id="groupkn" (change)="selectedGroupkn($event)" *ngIf="showknG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupnc" *ngIf="showncG">nc:</label>
+              <select class="dropdown-group-menu" id="groupnc" (change)="selectedGroupnc($event)" *ngIf="showncG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupkplus" *ngIf="showkplusG">k+:</label>
+              <select class="dropdown-group-menu" id="groupkplus" (change)="selectedGroupkplus($event)" *ngIf="showkplusG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupkoff" *ngIf="showkoffG">koff:</label>
+              <select class="dropdown-group-menu" id="groupkoff" (change)="selectedGroupkoff($event)" *ngIf="showkoffG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupkminus" *ngIf="showkminusG">k-:</label>
+              <select class="dropdown-group-menu" id="groupkminus" (change)="selectedGroupkminus($event)" *ngIf="showkminusG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupk2" *ngIf="showk2G">k2:</label>
+              <select class="dropdown-group-menu" id="groupk2" (change)="selectedGroupk2($event)" *ngIf="showk2G">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupn2" *ngIf="shown2G">n2:</label>
+              <select class="dropdown-group-menu" id="groupn2" (change)="selectedGroupn2($event)" *ngIf="shown2G">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="grouptdecay" *ngIf="showtdecayG">tdecay:</label>
+              <select class="dropdown-group-menu" id="grouptdecay" (change)="selectedGrouptdecay($event)" *ngIf="showtdecayG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupKM" *ngIf="showKMG">KM:</label>
+              <select class="dropdown-group-menu" id="groupKM" (change)="selectedGroupKM($event)" *ngIf="showKMG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+              <label for="groupKE" *ngIf="showKEG">KE:</label>
+              <select class="dropdown-group-menu" id="groupKE" (change)="selectedGroupKE($event)" *ngIf="showKEG">
+                <option></option>
+                <option *ngFor="let number of Groups" value="{{number}}">Group {{number}}</option>
+                <option value="Add group">Add group</option>
+              </select>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col px-md-5">
+    <div class="card text-dark">
+      <h1 class="mat-h1 center">Model</h1>
+
+      <select class="dropdown-model-menu" (change)="selectChangeHandler($event)">
+        <option selected disabled>Select a model</option>
+        <option value="Fragmentation" (click)="modelF($event)">Fragmentation</option>
+        <option value="Fragmentation And Secondary Nucleation" (click)="modelFSN($event)">Fragmentation And Secondary Nucleation</option>
+        <option value="Fragmentation And Secondary Nucleation with Gradual Loss" (click)="modelFSNGL($event)">Fragmentation And Secondary Nucleation with Gradual Loss</option>
+        <option value="Multi-Step Secondary Nucleation" (click)="modelMSSN($event)">Multi-Step Secondary Nucleation</option>
+        <option value="Nucleation Elongation" (click)="modelNE($event)">Nucleation Elongation</option>
+        <option value="Saturating Elongation" (click)="modelSE($event)">Saturating Elongation</option>
+        <option value="Saturating Elongation And Fragmentation" (click)="modelSEF($event)">Saturating Elongation And Fragmentation</option>
+        <option value="Saturating Elongation And Secondary Nucleation" (click)="modelSESN($event)">Saturating Elongation And Secondary Nucleation</option>
+        <option value="Secondary Nucleation" (click)="modelSN($event)">Secondary Nucleation</option>
+      </select>
+
+      <h1 class="current-model"> Current model: {{this.currentModel}} </h1>
+      <mat-card class="parameter-card" *ngIf="showmo">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>m<sub>o</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mo" id="Fitmo" value="Fit" (click)="moBtn($event)">
+              <label class="form-check-label" for="Fitmo">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mo" id="Global fitmo" value="Global fit" (click)="moBtn($event)">
+              <label class="form-check-label" for="Global fitmo">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mo" id="Group fitmo" value="Group fit" (click)="moBtnG($event)">
+              <label class="form-check-label" for="Group fitmo">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mo" id="Constmo" value="Const" (click)="moBtnC($event)">
+              <label class="form-check-label" for="Constmo">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="mo" id="Global constmo" value="Global const" (click)="moBtn($event)">
+              <label class="form-check-label" for="Global constmo">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextmo" (input)="moGiven($event)">
+        <p *ngIf="showmoG" class="const-txt">Select groups in data sets section</p>
+        <p *ngIf="showmoC" class="const-txt">Input values in data sets section</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showP0">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>P<sub>0</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="P0" id="FitP0" value="Fit" (click)="P0Btn($event)">
+              <label class="form-check-label" for="FitP0">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="P0" id="Global fitP0" value="Global fit" (click)="P0Btn($event)">
+              <label class="form-check-label" for="Global fitP0">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="P0" id="Group fitP0" value="Group fit" (click)="P0BtnG($event)">
+              <label class="form-check-label" for="Group fitP0">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="P0" id="ConstP0" value="Const" (click)="P0BtnC($event)">
+              <label class="form-check-label" for="ConstP0">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="P0" id="Global constP0" value="Global const" (click)="P0Btn($event)">
+              <label class="form-check-label" for="Global constP0">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextP0" (input)="P0Given($event)">
+        <p *ngIf="showP0G" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showP0C" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showM0">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>M<sub>0</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="M0" id="FitM0" value="Fit" (click)="M0Btn($event)">
+              <label class="form-check-label" for="FitM0">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="M0" id="Global fitM0" value="Global fit" (click)="M0Btn($event)">
+              <label class="form-check-label" for="Global fitM0">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="M0" id="Group fitM0" value="Group fit" (click)="M0BtnG($event)">
+              <label class="form-check-label" for="Group fitM0">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="M0" id="ConstM0" value="Const" (click)="M0BtnC($event)">
+              <label class="form-check-label" for="ConstM0">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="M0" id="Global constM0" value="Global const" (click)="M0Btn($event)">
+              <label class="form-check-label" for="Global constM0">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextM0" (input)="M0Given($event)">
+        <p *ngIf="showM0G" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showM0C" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showkn">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>n</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kn" id="Fitkn" value="Fit" (click)="knBtn($event)">
+              <label class="form-check-label" for="Fitkn">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kn" id="Global fitkn" value="Global fit" (click)="knBtn($event)">
+              <label class="form-check-label" for="Global fitkn">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kn" id="Group fitkn" value="Group fit" (click)="knBtnG($event)">
+              <label class="form-check-label" for="Group fitkn">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kn" id="Constkn" value="Const" (click)="knBtnC($event)">
+              <label class="form-check-label" for="Constkn">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kn" id="Global constkn" value="Global const" (click)="knBtn($event)">
+              <label class="form-check-label" for="Global constkn">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextkn" (input)="knGiven($event)">
+        <p *ngIf="showknG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showknC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="shownc">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>n<sub>c</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="nc" id="Fitnc" value="Fit" (click)="ncBtn($event)">
+              <label class="form-check-label" for="Fitnc">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="nc" id="Global fitnc" value="Global fit" (click)="ncBtn($event)">
+              <label class="form-check-label" for="Global fitnc">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="nc" id="Group fitnc" value="Group fit" (click)="ncBtnG($event)">
+              <label class="form-check-label" for="Group fitnc">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="nc" id="Constnc" value="Const" (click)="ncBtnC($event)">
+              <label class="form-check-label" for="Constnc">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="nc" id="Global constnc" value="Global const" (click)="ncBtn($event)">
+              <label class="form-check-label" for="Global constnc">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextnc" (input)="ncGiven($event)">
+        <p *ngIf="showncG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showncC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showkplus">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>+</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kplus" id="Fitkplus" value="Fit" (click)="kplusBtn($event)">
+              <label class="form-check-label" for="Fitkplus">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kplus" id="Global fitkplus" value="Global fit" (click)="kplusBtn($event)">
+              <label class="form-check-label" for="Global fitkplus">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kplus" id="Group fitkplus" value="Group fit" (click)="kplusBtnG($event)">
+              <label class="form-check-label" for="Group fitkplus">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kplus" id="Constkplus" value="Const" (click)="kplusBtnC($event)">
+              <label class="form-check-label" for="Constkplus">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kplus" id="Global constkplus" value="Global const" (click)="kplusBtn($event)">
+              <label class="form-check-label" for="Global constkplus">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextkplus" (input)="kplusGiven($event)">
+        <p *ngIf="showkplusG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showkplusC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showkoff">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>off</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="koff" id="Fitkoff" value="Fit" (click)="koffBtn($event)">
+              <label class="form-check-label" for="Fitkoff">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="koff" id="Global fitkoff" value="Global fit" (click)="koffBtn($event)">
+              <label class="form-check-label" for="Global fitkoff">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="koff" id="Group fitkoff" value="Group fit" (click)="koffBtnG($event)">
+              <label class="form-check-label" for="Group fitkoff">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="koff" id="Constkoff" value="Const" (click)="koffBtnC($event)">
+              <label class="form-check-label" for="Constkoff">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="koff" id="Global constkoff" value="Global const" (click)="koffBtn($event)">
+              <label class="form-check-label" for="Global constkoff">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextkoff" (input)="koffGiven($event)">
+        <p *ngIf="showkoffG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showkoffC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showkminus">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>-</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kminus" id="Fitkminus" value="Fit" (click)="kminusBtn($event)">
+              <label class="form-check-label" for="Fitkminus">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kminus" id="Global fitkminus" value="Global fit" (click)="kminusBtn($event)">
+              <label class="form-check-label" for="Global fitkminus">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kminus" id="Group fitkminus" value="Group fit" (click)="kminusBtnG($event)">
+              <label class="form-check-label" for="Group fitkminus">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kminus" id="Constkminus" value="Const" (click)="kminusBtnC($event)">
+              <label class="form-check-label" for="Constkminus">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="kminus" id="Global constkminus" value="Global const" (click)="kminusBtn($event)">
+              <label class="form-check-label" for="Global constkminus">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextkminus" (input)="kminusGiven($event)">
+        <p *ngIf="showkminusG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showkminusC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showk2">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>2</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="k2" id="Fitk2" value="Fit" (click)="k2Btn($event)">
+              <label class="form-check-label" for="Fitk2">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="k2" id="Global fitk2" value="Global fit" (click)="k2Btn($event)">
+              <label class="form-check-label" for="Global fitk2">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="k2" id="Group fitk2" value="Group fit" (click)="k2BtnG($event)">
+              <label class="form-check-label" for="Group fitk2">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="k2" id="Constk2" value="Const" (click)="k2BtnC($event)">
+              <label class="form-check-label" for="Constk2">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="k2" id="Global constk2" value="Global const" (click)="k2Btn($event)">
+              <label class="form-check-label" for="Global constk2">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextk2" (input)="k2Given($event)">
+        <p *ngIf="showk2G" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showk2C" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="shown2">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>n<sub>2</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="n2" id="Fitn2" value="Fit" (click)="n2Btn($event)">
+              <label class="form-check-label" for="Fitn2">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="n2" id="Global fitn2" value="Global fit" (click)="n2Btn($event)">
+              <label class="form-check-label" for="Global fitn2">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="n2" id="Group fitn2" value="Group fit" (click)="n2BtnG($event)">
+              <label class="form-check-label" for="Group fitn2">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="n2" id="Constn2" value="Const" (click)="n2BtnC($event)">
+              <label class="form-check-label" for="Constn2">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="n2" id="Global constn2" value="Global const" (click)="n2Btn($event)">
+              <label class="form-check-label" for="Global constn2">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextn2" (input)="n2Given($event)">
+        <p *ngIf="shown2G" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="shown2C" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showtdecay">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>t<sub>decay</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tdecay" id="Fittdecay" value="Fit" (click)="tdecayBtn($event)">
+              <label class="form-check-label" for="Fittdecay">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tdecay" id="Global fittdecay" value="Global fit" (click)="tdecayBtn($event)">
+              <label class="form-check-label" for="Global fittdecay">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tdecay" id="Group fittdecay" value="Group fit" (click)="tdecayBtnG($event)">
+              <label class="form-check-label" for="Group fittdecay">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tdecay" id="Consttdecay" value="Const" (click)="tdecayBtnC($event)">
+              <label class="form-check-label" for="Consttdecay">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="tdecay" id="Global consttdecay" value="Global const" (click)="tdecayBtn($event)">
+              <label class="form-check-label" for="Global consttdecay">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTexttdecay" (input)="tdecayGiven($event)">
+        <p *ngIf="showtdecayG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showtdecayC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showKM">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>k<sub>M</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KM" id="FitKM" value="Fit" (click)="KMBtn($event)">
+              <label class="form-check-label" for="FitKM">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KM" id="Global fitKM" value="Global fit" (click)="KMBtn($event)">
+              <label class="form-check-label" for="Global fitKM">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KM" id="Group fitKM" value="Group fit" (click)="KMBtnG($event)">
+              <label class="form-check-label" for="Group fitKM">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KM" id="ConstKM" value="Const" (click)="KMBtnC($event)">
+              <label class="form-check-label" for="ConstKM">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KM" id="Global constKM" value="Global const" (click)="KMBtn($event)">
+              <label class="form-check-label" for="Global constKM">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextKM" (input)="KMGiven($event)">
+        <p *ngIf="showKMG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showKMC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+      <mat-card class="parameter-card" *ngIf="showKE">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group mr-2" role="group" aria-label="Zero group">
+            <p>K<sub>E</sub></p>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="First group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KE" id="FitKE" value="Fit" (click)="KEBtn($event)">
+              <label class="form-check-label" for="FitKE">
+                Fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Second group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KE" id="Global fitKE" value="Global fit" (click)="KEBtn($event)">
+              <label class="form-check-label" for="Global fitKE">
+                Global fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Third group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KE" id="Group fitKE" value="Group fit" (click)="KEBtnG($event)">
+              <label class="form-check-label" for="Group fitKE">
+                Group fit
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fourth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KE" id="ConstKE" value="Const" (click)="KEBtnC($event)">
+              <label class="form-check-label" for="ConstKE">
+                Const
+              </label>
+            </div>
+          </div>
+          <div class="btn-group mr-2 btn-space2" role="group" aria-label="Fifth group">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="KE" id="Global constKE" value="Global const" (click)="KEBtn($event)">
+              <label class="form-check-label" for="Global constKE">
+                Global const
+              </label>
+            </div>
+          </div>
+        </div>
+        <input type="number" name="input" min="0" max="50" size="4" class="ms-txt-input" required *ngIf="showInputTextKE" (input)="KEGiven($event)">
+        <p *ngIf="showKEG" class="const-txt">Select groups in data section above</p>
+        <p *ngIf="showKEC" class="const-txt">Input values in data section above</p>
+      </mat-card>
+
+    </div>
+  </div>
+  <div class="col px-md-5">
+    <div class="card text-dark">
+      <div class="row">
+        <h1 class="mat-h1 center">Fitting</h1>
+      </div>
+      <div class="row">
+        <div class="col px-md-5">
+          <label>Basin hops (1-50):
+            <input type="number" name="input" min="0" max="50" size="4" class="border-0" required>
+          </label>
+          <button type="button" class="btn btn-outline-primary btn-space" >Fit</button>
+          <button type="button" class="btn btn-outline-primary">Fit w/errors</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
